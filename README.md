@@ -79,3 +79,14 @@ No modules.
 | cloudfront\_origin\_access\_identity\_iam\_arns | The IAM arns of the origin access identities created |
 | cloudfront\_origin\_access\_identity\_ids | The IDS of the origin access identities created |
 <!-- END_TF_DOCS -->
+
+
+## Usage
+
+### Running the binary directly
+
+To update documentation into README within a directory:
+
+```bash
+terraform-docs markdown table . --html=false --anchor=false --output-file=README.md
+```
