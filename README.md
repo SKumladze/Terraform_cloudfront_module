@@ -5,13 +5,13 @@ Terraform_cloudfront_module
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13.1 |
-| aws | >= 4.29 |
+| aws | >= 5.83 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 4.29 |
+| aws | >= 5.83 |
 
 ## Modules
 
