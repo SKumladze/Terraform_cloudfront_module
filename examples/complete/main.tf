@@ -11,7 +11,7 @@ provider "aws" {
 }
 
 locals {
-  domain_name = "sosokumladze.com" # trimsuffix(data.aws_route53_zone.this.name, ".")
+  domain_name = "domain_name.com" # trimsuffix(data.aws_route53_zone.this.name, ".")
   subdomain   = "test"
 }
 
