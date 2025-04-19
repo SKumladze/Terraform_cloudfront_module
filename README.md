@@ -1,4 +1,4 @@
-test
+Terraform_cloudfront_module
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
