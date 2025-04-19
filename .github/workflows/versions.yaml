@@ -1,0 +1,57 @@
+name: Version Change
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, ec2, devops]
+    container:
+      image: ubuntu:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get version
+        id: get_version
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
+          VERBOSE: true
+          DRY_RUN: true
+          DEFAULT_BUMP: patch
+          RELEASE_BRANCHES: main
+
+      - name: Bump version and push tag
+        id: bump_version
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
+          VERBOSE: true
+          DRY_RUN: false
+          DEFAULT_BUMP: patch
+          RELEASE_BRANCHES: main
+
+      - name: Changelog
+        id: github_changelog
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}\n\n Comparing changes: [${{ steps.get_version.outputs.tag }}...${{ steps.bump_version.outputs.new_tag }} ](https://github.com/${{github.repository}}/compare/${{steps.get_version.outputs.tag}}...${{ steps.bump_version.outputs.new_tag }})\n\n**Merged pull requests:**\n\n#{{UNCATEGORIZED}}",
+              "pr_template": "- #{{TITLE}}  ([#{{AUTHOR}}](https://github.com/#{{AUTHOR}}))"
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Create release"
+        uses: ncipollo/release-action@v1
+        with:
+          body: ${{ steps.github_changelog.outputs.changelog }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.bump_version.outputs.new_tag }}
